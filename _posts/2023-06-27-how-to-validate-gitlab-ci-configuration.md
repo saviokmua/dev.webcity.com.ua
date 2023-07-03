@@ -1,7 +1,7 @@
 ---
 layout: post
 author: savio
-title: Add rspec to existed Rails project
+title: How to validate Gitlab CI configuration
 categories: ['gitlab', 'ci']
 tags: ['gitlab', 'ci', 'validate', 'yml' ]
 image:
