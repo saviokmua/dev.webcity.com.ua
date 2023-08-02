@@ -99,7 +99,8 @@ require 'capistrano/rvm'
 require 'capistrano/puma'
 install_plugin Capistrano::Puma  # Default puma tasks
 install_plugin Capistrano::Puma::Systemd
-    
+install_plugin Capistrano::Puma::Nginx
+
 require 'capistrano/linked_files'
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
 ```
@@ -118,6 +119,8 @@ set :user,            'deployer'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 set :linked_files, %w[config/database.yml]
+append :linked_dirs,
+       'log', 'tmp/pids', 'tmp/cache', 'tmp/storage', 'storage'
 
 # Don't change these unless you know what you're doing
 set :pty,             true
@@ -237,6 +240,19 @@ add add user to `sudo`(`/etc/sudoers`) without password
 deployer ALL=(ALL:ALL) NOPASSWD:ALL
 ```
 
+install Nodejs
+
+```
+curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
+sudo bash /tmp/nodesource_setup.sh
+```
+
+install Yarn
+
+```
+npm install --global yarn
+```
+
 Install depended soft
 
 ```bash
@@ -319,3 +335,13 @@ bundle exec cap production deploy
 ```
 
 [Here](https://github.com/saviokmua/deploy-ruby-on-rails-rvm-puma-sidekiq-nginx){:target="_blank"} is an example project with the above description
+
+## Troubleshooting
+
+### 1) ERROR: The project you were looking for could not be found or you don't have permission to view it.
+
+before deploying run next command: 
+```
+eval `ssh-agent`
+```
+
